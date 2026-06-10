@@ -1,0 +1,6 @@
+{
+  "name": "AI Storyboard & Script Generator",
+  "description": "Biên soạn kịch bản phân cảnh (Storyboard Script) điện ảnh chi tiết bằng tiếng Việt và đề xuất prompt vẽ tranh AI tiếng Anh chuyên sâu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
