@@ -506,7 +506,7 @@ export default function App() {
       md += `- **Lời thoại / VO / SFX:**\n  > ${scene.loi_thoai_vo_sfx}\n`;
       md += `- **Mô tả hình ảnh AI Prompt:**\n  \`\`\`\n  ${scene.mo_ta_hinh_anh_ai_prompt}\n  \`\`\`\n`;
       if (scene.ai_video_prompt) {
-        md += `- **Prompt chuyển động tạo video (AI Video Prompt):**\n  \`\`\`\n  ${scene.ai_video_prompt}\n  \`\`\`\n`;
+        md += `- **Prompt chuyển động tạo video (AI Video Prompt):**\n  \`\`\`\n  ${scene.ai_video_prompt} - Duration: ${scene.thoi_luong}\n  \`\`\`\n`;
       }
       md += `\n---\n\n`;
     });
@@ -641,7 +641,7 @@ export default function App() {
       md += `\`\`\`text\n${scene.mo_ta_hinh_anh_ai_prompt}\n\`\`\`\n\n`;
       if (scene.ai_video_prompt) {
         md += `### AI Video Prompt (Runway/Sora/Luma/Kling):\n`;
-        md += `\`\`\`text\n${scene.ai_video_prompt}\n\`\`\`\n\n`;
+        md += `\`\`\`text\n${scene.ai_video_prompt} - Duration: ${scene.thoi_luong}\n\`\`\`\n\n`;
       }
       md += `* * * * * * * * * * * * * * * * * * * * * * *\n\n`;
     });
@@ -1342,7 +1342,7 @@ export default function App() {
                           </h3>
                         </div>
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[10px] font-mono bg-amber-500/10 text-amber-500 border border-amber-500/20 px-2 py-0.5 rounded font-bold">
+                          <span className="text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded font-bold">
                             👤 {totalCharacters} Nhân vật
                           </span>
                           <span className="text-[10px] font-mono bg-teal-500/10 text-teal-400 border border-teal-500/20 px-2 py-0.5 rounded font-bold">
@@ -1358,7 +1358,7 @@ export default function App() {
                         
                         {/* CHARACTER CATEGORY COL */}
                         <div className="space-y-4">
-                          <div className="flex items-center gap-1.5 text-amber-500 border-b border-amber-500/20 pb-1.5">
+                          <div className="flex items-center gap-1.5 text-blue-400 border-b border-blue-500/20 pb-1.5">
                             <span className="text-xs">👤</span>
                             <span className="text-[11px] font-bold tracking-wider uppercase font-sans">
                               Danh Sách Nhân Vật ({totalCharacters})
@@ -1370,13 +1370,13 @@ export default function App() {
                               const itemKey = nv.ma_tham_chieu || `nhan_vat_${idx}`;
                               return (
                                 <div key={itemKey} className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl p-4 flex flex-col justify-between space-y-3 relative overflow-hidden">
-                                  <div className="absolute top-0 left-0 w-full h-0.5 bg-amber-500"></div>
+                                  <div className="absolute top-0 left-0 w-full h-0.5 bg-blue-500"></div>
                                   
                                   <div className="space-y-1.5">
                                     <div className="text-xs font-bold text-slate-100 flex items-center flex-wrap gap-1.5">
                                       <span>{idx + 1}. {nv.ten}</span>
                                       {nv.ma_tham_chieu && (
-                                        <span className="px-1.5 py-0.5 bg-amber-500/10 text-amber-500 font-mono text-[9px] rounded border border-amber-500/20">
+                                        <span className="px-1.5 py-0.5 bg-blue-500/10 text-blue-400 font-mono text-[9px] rounded border border-blue-500/20">
                                           {nv.ma_tham_chieu}
                                         </span>
                                       )}
@@ -1400,9 +1400,9 @@ export default function App() {
                                           />
                                           <button
                                             onClick={() => downloadElementImage(itemKey, nv.ten)}
-                                            className="absolute bottom-2 right-2 p-1 bg-black/80 hover:bg-black text-white hover:text-amber-400 border border-[#222] hover:border-amber-500/40 rounded text-[9px] font-bold uppercase flex items-center gap-1 cursor-pointer transition-all shadow-md z-10"
+                                            className="absolute bottom-2 right-2 p-1 bg-black/80 hover:bg-black text-white hover:text-blue-400 border border-[#222] hover:border-blue-500/40 rounded text-[9px] font-bold uppercase flex items-center gap-1 cursor-pointer transition-all shadow-md z-10"
                                           >
-                                            <Download className="w-3.5 h-3.5 text-amber-500" />
+                                            <Download className="w-3.5 h-3.5 text-blue-400" />
                                             <span>Tải ảnh</span>
                                           </button>
                                         </>
@@ -1410,8 +1410,8 @@ export default function App() {
                                         <div className="absolute inset-0 p-3 flex flex-col justify-center items-center text-slate-600">
                                           {generatingElements[itemKey] ? (
                                             <div className="space-y-1 flex flex-col items-center">
-                                              <Loader2 className="w-5 h-5 text-amber-500 animate-spin" />
-                                              <div className="text-[8px] font-mono tracking-wider text-amber-400 animate-pulse uppercase">AI drawing...</div>
+                                              <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />
+                                              <div className="text-[8px] font-mono tracking-wider text-blue-400 animate-pulse uppercase">AI drawing...</div>
                                             </div>
                                           ) : (
                                             <>
@@ -1423,7 +1423,7 @@ export default function App() {
                                         </div>
                                       )}
                                       {generatingElements[itemKey] && (
-                                        <div className="absolute inset-x-0 h-0.5 bg-amber-500 shadow-lg shadow-amber-500/50 animate-[bounce_2s_infinite] top-0"></div>
+                                        <div className="absolute inset-x-0 h-0.5 bg-blue-500 shadow-lg shadow-blue-500/50 animate-[bounce_2s_infinite] top-0"></div>
                                       )}
                                     </div>
 
@@ -1433,7 +1433,7 @@ export default function App() {
                                       className={`w-full py-1.5 rounded text-[10px] font-bold tracking-wider uppercase flex items-center justify-center gap-1 transition-colors cursor-pointer ${
                                         elementImages[itemKey]
                                           ? 'bg-zinc-800 hover:bg-zinc-700 text-slate-400 border border-[#222]'
-                                          : 'bg-amber-500/10 text-amber-500 border border-amber-500/30 hover:bg-amber-500/20'
+                                          : 'bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:bg-blue-500/20'
                                       }`}
                                     >
                                       {generatingElements[itemKey] ? (
@@ -1458,7 +1458,7 @@ export default function App() {
                                   {/* Prompt for Character */}
                                   <div className="flex flex-col pt-1">
                                     <div className="flex items-center justify-between mb-1">
-                                      <span className="text-[9px] font-bold text-amber-500/80 uppercase tracking-widest block">AI Prompt (2-Panel Character Sheet)</span>
+                                      <span className="text-[9px] font-bold text-blue-400/80 uppercase tracking-widest block">AI Prompt (2-Panel Character Sheet)</span>
                                       <button
                                         onClick={() => copyElementPromptToClipboard(nv.prompt_tao_anh_2_panel || nv.prompt_tao_anh, itemKey)}
                                         className="text-slate-500 hover:text-white bg-black hover:bg-zinc-800 border border-[#222] p-1 px-1.5 rounded text-[8px] font-bold uppercase transition-all flex items-center gap-0.5 cursor-pointer"
@@ -1905,7 +1905,7 @@ export default function App() {
 
                                     if (matchNv) {
                                       elementLabel = `👤 ${matchNv.ten} (${code})`;
-                                      colorClass = "bg-amber-500/15 text-amber-400 border-amber-500/30";
+                                      colorClass = "bg-blue-500/15 text-blue-400 border-blue-500/30";
                                       if (elementImages[code]) {
                                         refImgUrl = elementImages[code];
                                       }
@@ -2003,7 +2003,7 @@ export default function App() {
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-[9px] font-bold text-sky-400 uppercase tracking-widest block font-sans">Mô tả chuyển động - AI Video Prompt</span>
                                   <button
-                                    onClick={() => copyToClipboard(scene.ai_video_prompt!, scene.so_phan_canh + 1000)}
+                                    onClick={() => copyToClipboard(`${scene.ai_video_prompt} - Duration: ${scene.thoi_luong}`, scene.so_phan_canh + 1000)}
                                     className="text-slate-500 hover:text-white bg-black hover:bg-zinc-800 border border-[#222] p-1 px-2 rounded text-[9px] font-bold uppercase transition-all flex items-center gap-1 cursor-pointer"
                                     title="Sao chép video prompt"
                                   >
@@ -2021,7 +2021,7 @@ export default function App() {
                                   </button>
                                 </div>
                                 <div className="relative p-3 bg-black rounded-lg border border-[#333] font-mono text-[10px] leading-relaxed text-sky-400 select-all text-justify break-words">
-                                  {scene.ai_video_prompt}
+                                  {`${scene.ai_video_prompt} - Duration: ${scene.thoi_luong}`}
                                 </div>
                               </div>
                             )}
