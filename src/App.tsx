@@ -896,8 +896,8 @@ export default function App() {
               onChange={(e) => setSessionOptions(prev => ({ ...prev, storyIdea: e.target.value }))}
             />
 
-            {/* INTUITIVE RECOVERY ENGINE: LOAD STORYBOARD */}
-            <div className="pt-1 pb-1">
+            {/* INTUITIVE RECOVERY ENGINE: LOAD & RESET STORYBOARD */}
+            <div className="pt-1 pb-1 grid grid-cols-2 gap-2">
               <input
                 type="file"
                 ref={fileInputRef}
@@ -908,11 +908,26 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full py-2 bg-[#1C1C1F] border border-amber-500/40 glow-flow-btn text-amber-500 hover:text-amber-400 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 select-none cursor-pointer group"
+                className="w-full py-2 bg-[#1C1C1F] border border-amber-500/40 glow-flow-btn flash-click-effect text-amber-500 hover:text-amber-400 rounded-lg text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 select-none cursor-pointer group"
                 title="Chọn tệp JSON phục hồi (.JSON) để tải lại toàn bộ tiến độ, tham số và hình ảnh"
               >
-                <Upload className="w-3.5 h-3.5 text-amber-500 group-hover:-translate-y-0.5 transition-transform duration-300" />
-                <span>Load Kịch bản (.JSON)</span>
+                <Upload className="w-3.5 h-3.5 text-amber-500 group-hover:-translate-y-0.5 transition-transform duration-300 shrink-0" />
+                <span className="truncate">Load Kịch bản</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetStoryboard}
+                disabled={!(loading || currentScript !== null)}
+                className={`w-full py-2 bg-[#1C1C1F] text-rose-400 hover:text-rose-300 rounded-lg text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 select-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer group ${
+                  (loading || currentScript !== null)
+                    ? "border border-rose-500/40 glow-flow-btn-red flash-click-effect"
+                    : "border border-[#333] hover:bg-black hover:border-red-500/30"
+                }`}
+                title={loading ? "Dừng tiến trình hiện tại và khởi tạo lại hệ thống" : "Khởi tạo lại toàn bộ hệ thống về trạng thái ban đầu"}
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-rose-400 group-hover:-rotate-180 transition-transform duration-500 shrink-0" />
+                <span className="truncate">{loading ? "Dừng & Reset" : "Reset"}</span>
               </button>
             </div>
 
@@ -1081,18 +1096,6 @@ export default function App() {
                   <span>Phân tích kịch bản AI ⚡</span>
                 </>
               )}
-            </button>
-
-            {/* RESET STORYBOARD BUTTON */}
-            <button
-              type="button"
-              onClick={handleResetStoryboard}
-              disabled={!(loading || currentScript !== null)}
-              className="w-full py-2 bg-[#1C1C1F] hover:bg-black border border-[#333] hover:border-red-500/30 text-rose-400 hover:text-rose-300 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 select-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer mt-2 group"
-              title={loading ? "Dừng tiến trình hiện tại và khởi tạo lại hệ thống" : "Khởi tạo lại toàn bộ hệ thống về trạng thái ban đầu"}
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-rose-400 group-hover:-rotate-180 transition-transform duration-500" />
-              <span>{loading ? "Dừng & Reset" : "Reset Storyboard"}</span>
             </button>
           </div>
 
