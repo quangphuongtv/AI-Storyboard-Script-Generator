@@ -9,7 +9,7 @@ import {
   Film, Sparkles, Copy, Check, MapPin, Settings,
   Video, Eye, EyeOff, Volume2, Download, RefreshCcw, RotateCcw, History, Trash2,
   Play, FileText, Code, CheckCircle2, ChevronRight, Image as ImageIcon,
-  HelpCircle, AlertCircle, Loader2, List, Clipboard, Layers
+  HelpCircle, AlertCircle, Loader2, List, Clipboard, Layers, Upload
 } from 'lucide-react';
 import { StoryboardResponse, StoryboardScene, SavedScript, GeneratorOptions } from './types';
 
@@ -160,6 +160,19 @@ export default function App() {
   const [showSecret, setShowSecret] = useState<boolean>(false);
   const apiPopoverRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+  // Monitor scroll for header visual transition
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   // Close popover when clicking outside
   useEffect(() => {
@@ -664,11 +677,82 @@ export default function App() {
     document.body.removeChild(link);
   };
 
+  const downloadRecoveryJsonFile = () => {
+    if (!currentScript) return;
+    const recoveryPayload = {
+      type: "storyboard_recovery_pack",
+      version: "1.0",
+      sessionOptions,
+      currentScript,
+      sceneImages,
+      elementImages
+    };
+    const jsonStr = JSON.stringify(recoveryPayload, null, 2);
+    const filename = sanitizeFilename(`Kịch_bản_${currentScript.ten_video}_recovery`);
+    const blob = new Blob([jsonStr], { type: "application/json;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${filename}.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleLoadStoryboardJson = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result as string;
+        const payload = JSON.parse(text);
+
+        if (payload && payload.type === "storyboard_recovery_pack") {
+          setError(null);
+          if (payload.sessionOptions) {
+            setSessionOptions(payload.sessionOptions);
+          }
+          if (payload.currentScript) {
+            setCurrentScript(payload.currentScript);
+          }
+          if (payload.sceneImages) {
+            setSceneImages(payload.sceneImages);
+          }
+          if (payload.elementImages) {
+            setElementImages(payload.elementImages);
+          }
+        } else if (payload && (payload.ten_video || payload.danh_sach_phan_canh)) {
+          setError(null);
+          setCurrentScript(payload);
+          setSessionOptions(prev => ({
+            ...prev,
+            storyIdea: prev.storyIdea || payload.ten_video || ""
+          }));
+          setSceneImages({});
+          setElementImages({});
+        } else {
+          setError("Tệp JSON tải lên không đúng định dạng phục hồi hoặc kịch bản phân cảnh.");
+        }
+      } catch (err: any) {
+        console.error(err);
+        setError("Đã xảy ra lỗi khi đọc tệp JSON: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
   return (
     <div className="min-h-screen bg-[#333333] text-slate-200 flex flex-col font-sans overflow-x-hidden">
       
       {/* HEADER BAR */}
-      <header className="h-14 border-b border-[#2e2e33] bg-[#1a1a1c]/95 backdrop-blur-md flex items-center justify-between px-6 shrink-0 sticky top-0 z-[100] shadow-xl shadow-black/30">
+      <header className={`h-14 border-b transition-all duration-300 ease-in-out flex items-center justify-between px-6 shrink-0 sticky top-0 z-[100] ${
+        isScrolled 
+          ? "bg-[#101012]/92 backdrop-blur-lg border-neutral-800 shadow-2xl shadow-black/70" 
+          : "border-[#2e2e33] bg-[#1a1a1c]/95 backdrop-blur-md shadow-xl shadow-black/30"
+      }`}>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-amber-500 rounded flex items-center justify-center text-black font-bold text-sm">AI</div>
           <div>
@@ -800,6 +884,26 @@ export default function App() {
               value={sessionOptions.storyIdea}
               onChange={(e) => setSessionOptions(prev => ({ ...prev, storyIdea: e.target.value }))}
             />
+
+            {/* INTUITIVE RECOVERY ENGINE: LOAD STORYBOARD */}
+            <div className="pt-1 pb-1">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleLoadStoryboardJson}
+                accept=".json"
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full py-2 bg-[#1C1C1F] hover:bg-[#111] border border-[#222] hover:border-amber-500/30 text-amber-500 hover:text-amber-400 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 select-none cursor-pointer group"
+                title="Chọn tệp JSON phục hồi (.JSON) để tải lại toàn bộ tiến độ, tham số và hình ảnh"
+              >
+                <Upload className="w-3.5 h-3.5 text-amber-500 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                <span>Load Kịch bản (.JSON)</span>
+              </button>
+            </div>
 
             {/* QUICK EXAMPLES ROW */}
             <div className="space-y-2">
@@ -1954,11 +2058,12 @@ export default function App() {
                   </button>
 
                   <button
-                    onClick={downloadMarkdownFile}
+                    onClick={downloadRecoveryJsonFile}
                     className="py-2.5 px-3 bg-amber-500 hover:bg-amber-400 text-black rounded text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                    title="Lưu kịch bản cùng toàn bộ hình ảnh và tham số để khôi phục hoặc load lại sau"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    <span>Tải kịch bản (.MD)</span>
+                    <span>Lưu Kịch Bản (.JSON)</span>
                   </button>
 
                   <button
