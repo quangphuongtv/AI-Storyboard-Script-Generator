@@ -159,6 +159,7 @@ export default function App() {
   const [showKeyInput, setShowKeyInput] = useState<boolean>(false);
   const [showSecret, setShowSecret] = useState<boolean>(false);
   const apiPopoverRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Close popover when clicking outside
   useEffect(() => {
@@ -181,6 +182,10 @@ export default function App() {
   };
 
   const handleResetStoryboard = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
     setSessionOptions({
       storyIdea: "",
       style: "Cinematic Landscape Epic",
@@ -280,6 +285,12 @@ export default function App() {
       return;
     }
 
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setLoading(true);
     setLoadingStepIndex(0);
     setError(null);
@@ -291,7 +302,8 @@ export default function App() {
       const response = await fetch("/api/generate-storyboard", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...sessionOptions, customApiKey })
+        body: JSON.stringify({ ...sessionOptions, customApiKey }),
+        signal: controller.signal
       });
 
       const data = await response.json();
@@ -302,9 +314,16 @@ export default function App() {
       setCurrentScript(data);
       saveToHistory(data, sessionOptions.storyIdea, sessionOptions);
     } catch (err: any) {
+      if (err.name === 'AbortError') {
+        console.log("Kịch bản generation bị hủy bởi người dùng.");
+        return;
+      }
       console.error(err);
       setError(err.message || "Không thể khởi tạo kịch bản kịch tính từ AI. Vui lòng kiểm tra phím API.");
     } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+      }
       setLoading(false);
     }
   };
@@ -953,12 +972,12 @@ export default function App() {
             <button
               type="button"
               onClick={handleResetStoryboard}
-              disabled={loading}
+              disabled={!(loading || currentScript !== null)}
               className="w-full py-2 bg-[#1C1C1F] hover:bg-black border border-[#333] hover:border-red-500/30 text-rose-400 hover:text-rose-300 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 select-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer mt-2 group"
-              title="Khởi tạo lại toàn bộ hệ thống về trạng thái ban đầu"
+              title={loading ? "Dừng tiến trình hiện tại và khởi tạo lại hệ thống" : "Khởi tạo lại toàn bộ hệ thống về trạng thái ban đầu"}
             >
               <RotateCcw className="w-3.5 h-3.5 text-rose-400 group-hover:-rotate-180 transition-transform duration-500" />
-              <span>Reset Storyboard</span>
+              <span>{loading ? "Dừng & Reset" : "Reset Storyboard"}</span>
             </button>
           </div>
 
