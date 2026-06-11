@@ -12,6 +12,7 @@ import {
   HelpCircle, AlertCircle, Loader2, List, Clipboard, Layers, Upload
 } from 'lucide-react';
 import { StoryboardResponse, StoryboardScene, SavedScript, GeneratorOptions } from './types';
+import logoQPDigital from '../assets/Logo-QP Digital.png';
 
 // ----------------- SAFE LOCAL STORAGE HELPERS -----------------
 // These helpers isolate the application from throwing security or sandboxing exceptions
@@ -745,21 +746,31 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#333333] text-slate-200 flex flex-col font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#333333] text-slate-200 flex flex-col font-sans overflow-x-clip">
       
       {/* HEADER BAR */}
-      <header className={`h-14 border-b transition-all duration-300 ease-in-out flex items-center justify-between px-6 shrink-0 sticky top-0 z-[100] ${
+      <header className={`py-5 border-b-2 transition-all duration-300 ease-in-out flex items-center justify-between px-6 shrink-0 sticky top-0 z-[100] border-white/10 bg-[#444444]/50 backdrop-blur-lg ${
         isScrolled 
-          ? "bg-[#101012]/92 backdrop-blur-lg border-neutral-800 shadow-2xl shadow-black/70" 
-          : "border-[#2e2e33] bg-[#1a1a1c]/95 backdrop-blur-md shadow-xl shadow-black/30"
+          ? "shadow-2xl shadow-black/60" 
+          : "shadow-xl shadow-black/30"
       }`}>
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-amber-500 rounded flex items-center justify-center text-black font-bold text-sm">AI</div>
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-transparent flex items-center justify-center overflow-hidden rounded">
+            <img 
+              src={logoQPDigital} 
+              alt="Logo QP Digital" 
+              className="w-full h-full object-contain filter brightness-110" 
+              referrerPolicy="no-referrer"
+            />
+          </div>
           <div>
             <h1 className="text-[18.2px] font-black tracking-wider uppercase flex items-center gap-2">
               <span className="title-glow-flow">TRÌNH BIÊN DỊCH PHÂN CẢNH AI</span>
               <span className="text-[10px] font-mono font-bold tracking-tight bg-amber-500/10 text-amber-500 border border-amber-500/30 px-1.5 py-0.2 rounded uppercase">Studio Mode</span>
             </h1>
+            <p className="text-[12px] font-black uppercase tracking-wider purple-glow-flow mt-0.5">
+              AI STORYBOARD & SCRIPT GENERATOR
+            </p>
           </div>
         </div>
         
@@ -897,7 +908,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full py-2 bg-[#1C1C1F] hover:bg-[#111] border border-[#222] hover:border-amber-500/30 text-amber-500 hover:text-amber-400 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 select-none cursor-pointer group"
+                className="w-full py-2 bg-[#1C1C1F] border border-amber-500/40 glow-flow-btn text-amber-500 hover:text-amber-400 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 select-none cursor-pointer group"
                 title="Chọn tệp JSON phục hồi (.JSON) để tải lại toàn bộ tiến độ, tham số và hình ảnh"
               >
                 <Upload className="w-3.5 h-3.5 text-amber-500 group-hover:-translate-y-0.5 transition-transform duration-300" />
@@ -2071,7 +2082,7 @@ export default function App() {
                     className="py-2.5 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-all"
                   >
                     <FileText className="w-3.5 h-3.5" />
-                    <span>Tải kịch bản (.JSON)</span>
+                    <span>Tải Prompt (.JSON)</span>
                   </button>
                 </div>
 
