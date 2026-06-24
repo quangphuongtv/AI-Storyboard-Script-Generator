@@ -48,10 +48,26 @@ app.post("/api/generate-storyboard", async (req, res) => {
       const lang = outputLanguage || "Tiếng Việt";
       const ar = aspectRatio || "16:9";
 
-      const systemInstruction = `Bạn là một chuyên gia biên kịch và cố vấn nghệ thuật AI xuất sắc. Nhiệm vụ của bạn là tiếp nhận ý tưởng video (Ý tưởng Video) từ người dùng, đọc kỹ kịch bản thô của họ, và tự động phân tách, mở rộng thành một kịch bản phân cảnh chi tiết (Storyboard Script) kèm theo phân tích đầy đủ CÁC YẾU TỐ CHÍNH (KEY ELEMENTS) theo đúng định dạng được yêu cầu.
+      const systemInstruction = `Bạn là một chuyên gia biên kịch và cố vấn nghệ thuật AI xuất sắc, chuyên sáng tạo nội dung kịch bản cho video hoạt hình viral từ 3 đến 8 phút.
+Nhiệm vụ của bạn là tiếp nhận bối cảnh/ý tưởng video (Ý tưởng Video) từ người dùng, phân tích kỹ và phân cảnh (scene/shot) thật chi tiết, cuốn hút, đảm bảo đầy đủ tình tiết của câu chuyện cùng lời thoại và thuyết minh dẫn dắt hấp dẫn nhất.
+
+BẮT BUỘC kịch bản phân cảnh chi tiết (Storyboard Script) của bạn phải được thiết kế và triển khai chặt chẽ theo CÔNG THỨC NÂNG CAO ĐỂ LÀM VIDEO VIRAL PHIM HOẠT HÌNH DÙNG CẤU TRÚC 9 GIAI ĐOẠN sau:
+1. Hook (Móc câu 5–15 giây đầu): Đập ngay vào mắt người xem bằng một chi tiết tò mò, kịch tính, hoặc tình huống bất ngờ để giữ chân khán giả tuyệt đối.
+2. Giới thiệu nhân vật: Thiết lập nhanh danh tính, cá tính, nét đặc trưng hoặc bối cảnh của nhân vật chính.
+3. Mục tiêu của nhân vật: Khao khát lớn, đích đến hoặc động lực hành động cốt lõi của nhân vật.
+4. Xung đột xuất hiện: Biến cố ngáng đường nhân vật chính, phá vỡ thế cân bằng cũ.
+5. Thử thách tăng dần: Các khó khăn liên tục ập tới gắp lửa bỏ tay người, nâng cao cao trào và kịch tính.
+6. Khủng hoảng: Điểm rơi sâu nhất khi mọi hy vọng dường như vụt tắt khiến nhân vật đau đớn, đứng trước lựa chọn sinh tử nghẹt thở.
+7. Cao trào: Trận chiến, quyết định bùng nổ, đối mặt trực diện vượt lên số phận đẩy kịch tính lên đỉnh điểm.
+8. Giải quyết: Kết cục hành trình, gỡ nút thắt một cách thông minh, bất ngờ và thỏa đáng.
+9. Bài học cảm xúc: Thông điệp triết lý nhân văn sâu sắc lắng đọng chạm tới tim người xem, tăng khả năng viral và tương tác chia sẻ cảm xúc tốt.
+
+QUY TẮC THIẾT KẾ PHÙ HỢP BỐI CẢNH LỊCH SỬ VÀ ĐỊA LÝ:
+- Bạn BẮT BUỘC phải phân tích và xác định rõ thời kỳ xảy ra câu chuyện (ví dụ: lịch sử thời cổ đại, thời phong kiến, thế kỷ 19, hiện tại, tương lai...) và địa điểm cụ thể của câu chuyện (ví dụ: miền Nam Việt Nam - trước năm 1975, New York - năm 2050...) dựa trên ý tưởng cốt truyện người dùng cung cấp.
+- Từ thời kỳ lịch sử và vị trí địa lý được xác định độc lập này, bạn phải trực tiếp thiết kế các cấu trúc bối cảnh, mô tả ngoại hình/phong cách nhân vật và đạo cụ (quần áo, đồ dùng sinh hoạt, phương tiện di chuyển, vũ khí...) sao cho đồng bộ hoàn hảo, mang tính lịch sử và vùng miền chân thực, hoàn toàn phù hợp và tôn vinh bối cảnh chính xác đó.
 
 Bạn phải xác nhận các cài đặt tham số đầu vào được thiết lập và thiết kế sẵn:
-- Số lượng phân cảnh yêu cầu: ${count === 0 ? "AUTO (Tự động chia nhỏ chi tiết)" : `${count} phân cảnh`}
+- Số lượng phân cảnh yêu cầu: ${count === 0 ? "AUTO (Tự động chia nhỏ chi tiết trải dọc đủ 9 giai đoạn)" : `${count} phân cảnh (phân bổ hợp lý cho đủ 9 giai đoạn)`}
 - Tỷ lệ khung hình: ${ar}
 - Phong cách hình ảnh: ${userStyle}
 - Ngôn ngữ đầu ra: ${lang}
@@ -71,7 +87,6 @@ Bạn PHẢI phân chia phân cảnh thật chi tiết, đảm bảo phản ánh
      + Cấu trúc prompt: Viết thành một đoạn văn liền mạch, không dùng tiêu đề phụ hay gạch đầu dòng, đi theo trình tự chính xác sau: Danh tính nhân vật/chủ thể -> Trang phục và đạo cụ -> Môi trường/background -> Cỡ cảnh và bố cục -> Chất lượng ánh sáng và color grade -> Texture và chi tiết -> Micro-expression hoặc pose phù hợp cảm xúc.
      + Quy tắc Character Sheet 2-Panel:
        * Nếu nhân vật chỉ xuất hiện một hình dạng: chỉ rõ bố cục 2 panel trong prompt: "left: head-and-shoulders portrait | right: full-body standing pose (front view, side view, back view)", background một màu trung tính.
-       * Nếu nhân vật chỉ xuất hiện một hình dạng: chỉ rõ bố cục 2 panel trong prompt: "left: head-and-shoulders portrait | right: full-body standing pose (front view, side view, back view)", background một màu trung tính.
        * Nếu nhân vật xuất hiện với nhiều hình dạng: chỉ rõ bố cục 2 panel trong prompt: Up (mô tả Look A) được chia thành 2 phần: "left: head-and-shoulders portrait | right: full-body standing pose" với background là một màu trung tính; Down (mô tả Look B) được chia thành 2 phần: "left: head-and-shoulders portrait | right: full-body standing pose" với background là một màu trung tính.
      + Ràng buộc tính đồng nhất (Khóa định danh): Đồng thời khóa chặt các dấu hiệu nhận diện đặc trưng trong prompt bao gồm: màu mắt, kiểu tóc thực sự chính xác, chi tiết trang phục để đảm bảo giữ ổn định tạo hình xuyên suốt các shot.
 
@@ -79,28 +94,33 @@ Bạn PHẢI phân chia phân cảnh thật chi tiết, đảm bảo phản ánh
    - Prompt tạo ảnh tham chiếu (trường 'prompt_tao_anh' của 'boi_canh' và 'dao_cu') viết bằng tiếng Anh phải được xây dựng liền mạch làm một đoạn văn duy nhất không chứa tiêu đề phụ, bám sát tuyệt đối công thức: Danh tính chủ thể/vật thể -> Trang phục và đạo cụ -> Môi trường/background -> Cỡ cảnh và bố cục -> Chất lượng ánh sáng và color grade -> Texture và chi tiết -> Micro-expression hoặc pose/không khí phù hợp cảm xúc.
 
 4. Đối với chế độ phân tách phân cảnh cần tuân thủ nghiêm ngặt:
-   - Nếu chạy chế độ AUTO (sceneCount = 0): Phân tách kịch bản thành các phân cảnh phẳng nối tiếp nhau, trong đó bất kỳ hành động sinh động hay khoảnh khắc câu chuyện nào kéo dài quá 5 giây đều phải được chia thành 2 hoặc nhiều phân cảnh liên tiếp nhau, đảm bảo thời lượng mỗi cảnh ≤ 5 giây (ví dụ: '00-03s', '03-05s').
-   - Nếu chạy chế độ chọn trước phân cảnh (sceneCount > 0): Chia nhỏ kịch bản thành chính xác số phân cảnh yêu cầu (${count}) với thời lượng được phân bổ đều từ 5 đến 10 giây cho mỗi phân cảnh (ví dụ: '00-07s', '07-15s').
+   - Các phân cảnh được gọi là "Shot" thay vì "Scene".
+   - Thời lượng mỗi phân cảnh (shot) bắt buộc phải từ 5 đến 10 giây (ví dụ: '00-06s', '06-12s', '12-20s',...), được chia nhỏ linh hoạt tùy theo lời thoại và hành động cụ thể diễn ra trong shot đó của câu chuyện.
+   - Nếu chạy chế độ AUTO (sceneCount = 0): Phân tách kịch bản thành các shot phẳng tiếp nối nhau bám sát đầy đủ 9 giai đoạn của cốt truyện, đảm bảo thời lượng mỗi shot từ 5 đến 10 giây.
+   - Nếu chạy chế độ chọn trước phân cảnh (sceneCount > 0): Chia nhỏ kịch bản thành chính xác số shot yêu cầu (${count}) phân bổ đều khắc khoải bối cảnh qua 9 giai đoạn cốt truyện, với thời lượng của mỗi shot duy trì từ 5 đến 10 giây.
 
-5. Đối với mỗi phân cảnh (scene), cung cấp đầy đủ:
-   - Số thứ tự phân cảnh (Scene number) và Thời lượng (Duration).
+5. Đối với mỗi phân cảnh (shot), cung cấp đầy đủ:
+   - Số thứ tự phân cảnh (Shot number) và Thời lượng (Duration từ 5 đến 10 giây).
    - Xác định mảng mã tham chiếu các Element tham gia vào phân cảnh đó (ma_tham_chieu_elements).
    - Hành động & Biểu cảm nhân vật (Action & Expression).
    - Lời thoại (Dialogue) của nhân vật hoặc lời thoại trực thoại.
    - Thuyết minh / VO / SFX: LỜI THOẠI / VO / SFX - [SFX/VO & Audio Design], phải bắt đầu hoặc chứa nội dung của lời thoại (Dialogue) này một cách tự nhiên kèm thuyết minh phụ và SFX âm thanh.
    - Góc quay (Camera Angle), Chuyển động camera (Camera Movement), Bối cảnh không gian xảy ra phân cảnh.
-   - Mô tả hình ảnh - AI Prompt: Prompt tiếng Anh chi tiết, nhúng các mã tham chiếu của những element tham gia vào phân cảnh này (Ví dụ: "[character_he_hero] standing in [location_forest]...").
-   - Prompt chuyển động tạo video (AI Video Prompt): Prompt tiếng Anh cho AI tạo video. BẮT BUỘC mô tả chuyển động trôi chảy mượt mà điện ảnh, chèn phần dialog lời thoại ngay phía trước phần '[SFX/VO & Audio Design]', và kết thúc bằng dòng 'No subtitle, No text, No background music'.
+   - Mô tả hình ảnh - AI Prompt: Prompt tiếng Anh chi tiết, nhúng các mã tham chiếu của những element tham gia vào phân cảnh này (Ví dụ: "[character_he_hero] standing in [location_forest]..."). BẮT BUỘC chèn thêm nội dung chi tiết của các yếu tố BỐI CẢNH / SETTING (ví dụ: "Setting: [location_forest] with dense fog...") và GÓC QUAY / CAMERA ANGLE (ví dụ: "Camera angle: Medium close-up, high angle view...") vào trong prompt mô tả hình ảnh này bằng tiếng Anh.
+   - Prompt chuyển động tạo video (AI Video Prompt): Prompt tiếng Anh cho AI tạo video. BẮT BUỘC mô tả chuyển động trôi chảy mượt mà điện ảnh, chèn thêm nội dung chi tiết của các thành phần CHUYỂN ĐỘNG / CAMERA (ví dụ: "Camera movement: slow pan right..."), và chèn luôn kịch bản âm thanh [SFX/VO & Audio Design] (Dialogue/giọng nói/thuyết minh/hiệu ứng) tương ứng của phân cảnh đó để AI đồng bộ hóa chuyển động. Kết thúc bằng dòng 'No subtitle, No text, No background music'.
 
-6. Ngôn ngữ của toàn bộ tài liệu (bao gồm tên video, tên yếu tố, mô tả ngoại hình, mô tả bối cảnh, bối cảnh phân cảnh, hành động & biểu cảm, lời thoại, hiệu ứng âm thanh, diễn giải góc máy, chuyển động...) BẮT BUỘC phải viết bằng ngôn ngữ đầu ra được thiết lập: ${lang}. Các trường prompt tiếng Anh tạo ảnh và prompt video vẫn giữ ngôn ngữ gốc là Tiếng Anh.`;
+6. Ngôn ngữ của toàn bộ tài liệu (bao gồm tên video, tên yếu tố, mô tả ngoại hình, mô tả bối cảnh, bối cảnh phân cảnh/shot, hành động & biểu cảm, lời thoại, hiệu ứng âm thanh, diễn giải góc máy, chuyển động...) BẮT BUỘC phải viết bằng ngôn ngữ đầu ra được thiết lập: ${lang}. Các trường prompt tiếng Anh tạo ảnh và prompt video vẫn giữ ngôn ngữ gốc là Tiếng Anh.`;
 
-      let prompt = `Hãy thiết kế kịch bản phân cảnh chi tiết và phân tích các yếu tố cốt lõi cho ý tưởng sau: "${storyIdea}".
-Yêu cầu bổ sung:
+      let prompt = `Hãy thiết kế kịch bản hoạt hình chi tiết chất lượng cao và phân tích các yếu tố cốt lõi cho ý tưởng sau: "${storyIdea}".
+
+Ý tưởng kịch bản này PHẢI được phân tích cực kỳ kỹ lưỡng, đặc sắc, bám sát các tình tiết gốc rễ truyền cảm hứng, và được phân bổ chi tiết thành từng phân cảnh kịch tính dựa trên CẤU TRÚC 9 GIAI ĐOẠN SỬ THI/VIRAL (Hook -> Giới thiệu nhân vật -> Mục tiêu -> Xung đột xuất hiện -> Thử thách tăng dần -> Khủng hoảng cực độ -> Cao trào bùng nổ -> Giải quyết nút thắt -> Bài học đạo đức sâu sắc). Hãy mở rộng chi tiết các nét hành động biểu cảm, biên soạn đầy đủ mọi câu thoại lột tả sinh động, cùng lời dẫn chuyện cảm xúc lôi cuốn nhất.
+
+Yêu cầu bổ sung kì vọng:
 - Phong cách phim mong muốn: ${userStyle}
 - Tông giọng hội thoại / VO / Nhạc nền: ${userTone}
 - Tỷ lệ khung hình: ${ar}
 - Thiết lập ngôn ngữ đầu ra: ${lang}
-- Quy tắc chia phân cảnh: Phân tách kịch bản theo chế độ ${count === 0 ? "AUTO (sceneCount = 0): Chi tiết hóa kịch bản thành danh sách phẳng, mỗi cảnh ≤ 5s" : `số phân cảnh cố định là ${count} cảnh, thời lượng đều từ 5s-10s`}.`;
+- Quy tắc chia phân cảnh: Phân tách kịch bản thành các phân cảnh gọi là "Shot", thời lượng của mỗi Shot bắt buộc từ 5 đến 10 giây (linh hoạt tùy thuộc độ dài lời thoại và diễn biến hành động). Chế độ phân tách: ${count === 0 ? "AUTO (sceneCount = 0): Tự động chia nhỏ chi tiết dọc đủ 9 giai đoạn" : `Chia đều thành chính xác ${count} shot`}.`;
 
       if (characterConsistency && characterConsistency.trim()) {
         prompt += `\n- ĐẢM BẢO ĐỒNG NHẤT NHÂN VẬT CHÍNH (Character Consistency): Tích hợp chi tiết đặc điểm miêu tả sau đây vào tất cả các phân cảnh, bối cảnh và đặc biệt phải lưu giữ miêu tả này trong thuộc tính 'Mô tả hình ảnh - AI Prompt' (mo_ta_hinh_anh_ai_prompt) tiếng Anh của từng cảnh, cũng như trong phần phân tích Nhân vật phim và đi kèm với mã tham chiếu tương ứng: "${characterConsistency}".`;
@@ -180,11 +200,11 @@ Yêu cầu bổ sung:
                   properties: {
                     so_phan_canh: {
                       type: Type.INTEGER,
-                      description: "Số thứ tự phân cảnh (1, 2, 3...)"
+                      description: "Số thứ tự phân cảnh / shot (1, 2, 3...)"
                     },
                     thoi_luong: {
                       type: Type.STRING,
-                      description: "Thời lượng phân cảnh, ví dụ: '00-03s'"
+                      description: "Thời lượng phân cảnh / shot, ví dụ: '00-07s', bắt buộc từ 5 đến 10 giây phù hợp với lời thoại và hành động."
                     },
                     ma_tham_chieu_elements: {
                       type: Type.ARRAY,
@@ -221,11 +241,11 @@ Yêu cầu bổ sung:
                     },
                     mo_ta_hinh_anh_ai_prompt: {
                       type: Type.STRING,
-                      description: "Prompt tiếng Anh viết cực kỳ chi tiết của phân cảnh, nhúng các mã tham chiếu."
+                      description: "Prompt tiếng Anh viết cực kỳ chi tiết của phân cảnh, nhúng các mã tham chiếu, và BẮT BUỘC chứa nội dung chi tiết của các yếu tố BỐI CẢNH / SETTING cùng GÓC QUAY / CAMERA ANGLE ở dạng tiếng Anh."
                     },
                     ai_video_prompt: {
                       type: Type.STRING,
-                      description: "AI Video Prompt bằng tiếng Anh. Phải nhúng các mã tham chiếu bối cảnh, chuyển động camera, hành động nhân vật. Phải chứa lời thoại Dialogue của phân cảnh này ngay phía trước phần '[SFX/VO & Audio Design]: ...' mô tả âm thanh, và kết thúc bằng 'No subtitle, No text, No background music'."
+                      description: "AI Video Prompt bằng tiếng Anh. Phải nhúng các mã tham chiếu, bối cảnh, di chuyển nhân vật, và BẮT BUỘC chèn thêm mô tả chi tiết của thành phần CHUYỂN ĐỘNG / CAMERA kèm lời thoại/thuyết minh [SFX/VO & Audio Design] (Dialogue). Kết thúc bằng 'No subtitle, No text, No background music'."
                     }
                   },
                   required: [
@@ -283,7 +303,7 @@ Yêu cầu bổ sung:
   // API Route 2: Generate Demo Image using gemini-2.5-flash-image
   app.post("/api/generate-demo-image", async (req, res) => {
     try {
-      const { prompt, referenceImages, customApiKey, aspectRatio } = req.body;
+      const { prompt, referenceImages, customApiKey, aspectRatio, imageSize } = req.body;
       if (!prompt || typeof prompt !== "string") {
         return res.status(400).json({ error: "Yêu cầu cung cấp prompt mô tả vẽ ảnh" });
       }
@@ -336,15 +356,16 @@ Yêu cầu bổ sung:
         text: `${prompt}, cinematic style, digital art, high quality, highly detailed${ratioSuffix}`
       });
 
-      // Invoke gemini-2.5-flash-image to generate illustration parts with technical imageConfig matching ratio
+      // Invoke gemini-3.1-flash-image (Nano Banana 2) to generate illustration parts with technical imageConfig matching ratio and selected resolution
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash-image",
+        model: "gemini-3.1-flash-image",
         contents: {
           parts: parts
         },
         config: {
           imageConfig: {
-            aspectRatio: aspectRatio || "1:1"
+            aspectRatio: aspectRatio || "1:1",
+            imageSize: imageSize || "1K"
           }
         }
       });

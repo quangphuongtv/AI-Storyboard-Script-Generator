@@ -9,7 +9,7 @@ import {
   Film, Sparkles, Copy, Check, MapPin, Settings,
   Video, Eye, EyeOff, Volume2, Download, RefreshCcw, RotateCcw, History, Trash2,
   Play, FileText, Code, CheckCircle2, ChevronRight, Image as ImageIcon,
-  HelpCircle, AlertCircle, Loader2, List, Clipboard, Layers, Upload
+  HelpCircle, AlertCircle, Loader2, List, Clipboard, Layers, Upload, ArrowDown
 } from 'lucide-react';
 import { StoryboardResponse, StoryboardScene, SavedScript, GeneratorOptions } from './types';
 import logoQPDigital from '../assets/Logo-QP Digital.png';
@@ -43,27 +43,67 @@ const safeRemoveItem = (key: string) => {
 };
 // ----------------------------------------------------------------
 
-// Danh sách các kịch bản mẫu thú vị để người dùng bấm chọn nhanh
-const EXAMPLES = [
+// Danh sách các kịch bản mẫu sử thi có sẵn để đề xuất phong phú cho người xem
+const DATABASE_OF_EXAMPLES = [
   {
-    title: "Truyền thuyết Thánh Gióng",
-    description: "Đứa trẻ Phù Đổng vươn vai dẹp giặc",
-    idea: "Đứa trẻ ba tuổi ở làng Phù Đổng bấy lâu không biết nói cười, bỗng nghe tiếng sứ giả truyền lời vua kêu gọi người hiền dẹp giặc Ân cứu nước thì liền nói được. Đứa trẻ lớn nhanh như thổi, vươn vai biến thành một tráng sĩ khổng lồ, mặc giáp sắt, cầm roi sắt, cưỡi ngựa sắt phun lửa xông trận dẹp tan quân giặc rồi bay về trời."
+    title: "Thánh Gióng: Phù Đổng Sử Thi",
+    description: "Đứa trẻ vươn vai hóa khổng lồ dạt giặc Ân cứu nước",
+    idea: "Đứa trẻ lên ba ở làng Phù Đổng bấy lâu im lặng không cười nói, bỗng khi nghe tiếng loa sứ giả chiêu mộ hiền tài liền ngồi dậy dõng dạc nói lớn. Đứa trẻ ăn bạt ngàn cơm vàng lớn nhanh như thổi, vươn vai hóa thành một tráng sĩ khổng lồ cao mười trượng, khoác giáp sắt rực lửa, tay vung roi sắt bách chiến bách thắng, cưỡi ngựa sắt bờm xích liên vang trời phun lửa đỏ rực xông thẳng vào dẹp tan vạn quân giặc cứu sống đất nước, rồi ung dung bay về trời từ đỉnh núi Sóc Sơn huyền thoại."
   },
   {
-    title: "Sự tích bánh chưng bánh giầy",
-    description: "Lang Liêu và lễ vật dâng vua cha",
-    idea: "Hoàng tử Lang Liêu nghèo khó, được thần tiên mách bảo trong giấc mơ, đã dùng những hạt gạo nếp dẻo thơm, đậu xanh và thịt heo để tạo nên hai loại bánh: Bánh chưng hình vuông tượng trưng cho Đất, Bánh giầy hình tròn tượng trưng cho Trời để dâng lên vua cha nhân dịp đầu xuân."
+    title: "Bánh Chưng Bánh Giầy: Lang Liêu",
+    description: "Thần tiên mách bảo lễ vật đất trời từ nếp dẻo thơm",
+    idea: "Hoàng tử nghèo Lang Liêu hiếu thảo, đêm nằm mơ thấy vị Tiên Ông uy nghi hiện hình giữa làn sương bạc truyền thụ: 'Đất trời không gì quý bằng hạt gạo'. Khi tỉnh giấc, Lang Liêu tự tay thu hoạch gạo nếp thơm dẻo mộc mạc, kết hợp đỗ xanh vàng óng và thịt heo rừng bọc lá dong xanh mướt tạo nên bánh chưng vuông tượng trưng cho Đất, bánh giầy tròn trĩnh tượng trưng cho Trời để dâng lên King Hùng Vương giữa tiếng nhạc trống hội rộn rã đầy xúc động."
   },
   {
-    title: "Phi hành gia cô độc Kepler",
-    description: "Tín hiệu cổ đại Kepler-186f",
-    idea: "Hành trình của một phi hành gia cô đơn trên hành tinh đóng băng Kepler-186f hoang vu. Bất ngờ, anh tìm thấy một tháp tín hiệu bằng pha lê cổ đại chìm dưới lớp băng mỏng đang phát ra nguồn năng lượng lấp lánh và bản nhạc cổ điển vang vào vũ trụ."
+    title: "Sơn Tinh Thủy Tinh: Đại Chiến",
+    description: "Sóng dữ dâng trào ngập núi gặp lá chắn đá sấm sét",
+    idea: "Trận hỗn chiến kinh thiên động địa giữa Sơn Tinh và Thủy Tinh. Thủy Tinh giận dữ tột cùng, hai mắt lóe sáng xanh biếc dâng nước lũ cuộn trào ngập lụt ruộng đồng nã sóng dữ phá hủy chân núi, rồng nước khổng lồ gầm rú đạp đổ rừng già xối xả. Sơn Tinh bình thản giương trượng thần bách thắng dựng những bức tường đá sấm sét vững chãi cao vạn trượng chặn đứng thác lũ cuồng bạo, núi cao dâng đến đâu sườn núi dời rít gào nâng cao đến đấy trong tiếng sấm rung chuyển bờ cõi."
   },
   {
-    title: "Hồ Gươm: Hoàn gươm thần",
-    description: "Lê Lợi gặp rùa vàng bên hồ"
-  , idea: "Sau khi đánh đuổi giặc Minh, vua Lê Lợi dạo chơi bằng thuyền trên hồ Tả Vọng. Đột nhiên một cụ Rùa Vàng khổng lồ nổi lên, cất tiếng yêu cầu vua trả lại thanh gươm Thuận Thiên mà Long Vương đã cho mượn đánh giặc. Nhà vua tháo gươm dâng lên, Rùa ngậm gươm và lặn sâu xuống đáy hồ lấp lánh hào quang."
+    title: "Hồ Gươm: Thần Kim Quy Đòi Kiếm",
+    description: "Lê Lợi trả gươm Thuận Thiên lấp lánh hào quang",
+    idea: "Sau ngày đại thắng quét sạch ngoại xâm, vua Lê Lợi thảnh thơi dạo thuyền rồng trên hồ Tả Vọng xanh biếc hiền hòa. Đột ngột nước hồ sủi bọt ngọc lấp lánh, một cụ Rùa Vàng khổng lồ nhô chiếc mai vàng óng ánh ngâm thanh gươm thần Thuận Thiên phát ra tia hào quang trắng tựa ban ngày rực rỡ, dõng dạc đòi lại bảo vật cho Long Quân dưới Thủy phủ. Nhà vua thành kính kính cẩn dâng kiếm bóng nhoáng, thần rùa ngậm gươm rẽ sóng lặn sâu xuống đáy hồ huyền bí."
+  },
+  {
+    title: "Cyberpunk Hội An: Mật Mã Gỗ Cổ",
+    description: "Bản đồ Hologram rực sáng bên dòng sông Hoài neon 2099",
+    idea: "Giữa phố cổ Hội An năm 2099 rực rỡ đèn lồng điện tử neon, nữ hacker tên Lam phát hiện một hộp gỗ khảm xà cừ cổ chứa chip sinh học huyền bí thế kỷ 19. Khi cắm cổng năng lượng kết nối, hộp gỗ bùng cháy phát sáng hologram một bản đồ 3D cực đại rọi sáng toàn bộ dòng sông Hoài với lộ trình dẫn tới đền thờ ngọc ẩn sâu dưới nước. Các drone săn đuổi của tập đoàn ác Ma-Vương đột ngột nổ súng áp sát. Lam ôm chặt hộp gỗ nhảy thẳng từ mái ngói cổ rêu phong xuống lòng sông năng lượng lấp lánh xanh lam rực rỡ đầy ngoạn mục."
+  },
+  {
+    title: "Hạm Đội Bạch Đằng: Thiên Hà 3045",
+    description: "Mạng lưới cọc từ tính hủy diệt hạm đội robot viễn chinh",
+    idea: "Năm 3045, tại cửa ngõ tinh vân Bạch Đằng khốc liệt, Đô đốc Trần Minh chỉ huy hạm đội không gian nhỏ bé đối đầu vạn chiến hạm khổng lồ của đế chế robot cơ khí hủy diệt tàn bạo. Khi thủy triều năng lượng dâng cao cực hạn rồi bất ngờ rút mạnh, Trần Minh ra lệnh kích hoạt mạng lưới cọc từ tính Plasma chôn ngầm dưới tinh vân bụi. Vạn chiếc tàu giặc rầm rập lao tới đâm sầm phải mạng lưới từ trường bốc cháy nổ tung rực rỡ như hàng trăm mặt trời mini bùng cháy giữa đêm vũ trụ đen thẳm."
+  },
+  {
+    title: "Bí Mật Cối Đá Cổ Mỹ Sơn",
+    description: "Khảo cổ gõ trống cổ thức tỉnh tượng vũ nữ Apsara",
+    idea: "Trong đêm trăng rằm huyền ảo tại Thánh địa Mỹ Sơn rêu phong u tĩnh, một nữ khảo cổ học tên Vy dùng cọ lau sạch ký tự cổ tựa cổ vật trên mặt bệ đá vũ nữ cổ. Bất ngờ, một giọt sương rơi trúng bệ đá, kích hoạt luồng sáng đỏ chạy dọc các khe gạch cổ xưa. Tượng tiên nữ đền tháp Apsara bằng đá bách niên thình lình nứt vỡ lớp phong ấn lấp lánh ánh kim, nhẹ nhàng bước ra múa uyển chuyển giữa không trung lấp lánh tàn lửa vàng, thì thầm một mật mã bảo báu cổ đại bằng chất nhạc trầm bổng mê hoặc."
+  },
+  {
+    title: "Tháp Hải Đăng Sa Kỳ Cứu Đêm",
+    description: "Cột laser cực đại xé toạc đại dương dẫn lối neo đậu",
+    idea: "Cơn bão cuồng phong giật cấp 15 gầm rú dữ dội xé toạc mạn chiếc tàu tản cư nghèo của các ngư dân miền Trung giữa biển đen kịt mênh mông bão bùng. Tại trạm hải đăng Sa Kỳ cổ kính, người gác đèn kiên dũng đóng cầu dao laser cực mạnh, chiếu một luồng sáng laser xanh ngọc tuyệt đẹp xuyên thủng bức tường mưa gió khổng lồ, soi rọi lối đi an toàn giúp con tàu lách qua khe đá ngầm nhọn hoắt trong gang tấc cứu sống hàng chục ngư dân."
+  },
+  {
+    title: "Ga Hà Nội Vượt Thời Không",
+    description: "Toa tàu hơi nước chứa đầy bụi sao băng ngược dòng 1980",
+    idea: "Kim đồng hồ Ga Hà Nội điểm đúng 00:00 đêm giao thừa ẩm ướt lãng mạn. Một hành khách bất ngờ nhận ra tiếng còi tàu hơi nước vang dội xé tan hư không tĩnh mịch, một con tàu bằng kim loại đồng cổ xưa, bánh xe thép rực lửa lướt dọc rãnh đường ray hiện đại chói sáng. Cửa tàu mở ra, bên trong lấp lánh chứa đầy bụi sao băng rực rỡ dội vào lòng đêm. Hành khách bước lên toa hỏa cổ kính, tàu lao đi xé rách màng hư vô đưa hành khách về lại Hà Nội tấp nập không gian thanh bình năm 1980 rộn rã rợp tiếng ve kêu pháo nổ."
+  },
+  {
+    title: "Ảo Ảnh Sa Mạc Cát Đỏ Mũi Né",
+    description: "Tiếng sáo cổ thuật dựng quạt gió bão ngăn quân phi tặc",
+    idea: "Một cô gái du mục mang trang phục đỏ thêu lấp lánh, một mình đứng trên cồn cát đỏ rực của sa mạc cát Mũi Né lộng gió. Đối diện cô là đội xe thiết giáp phi cơ săn tiền thưởng hiện đại gầm rú điên cuồng muốn cướp đoạt ngọc thần trong tay cô. Cô gái đưa chiếc sáo đồng rỉ sét lên môi thổi khúc nhạc cổ thuật réo rắt ngân vang. Cát đỏ cuồn cuộn trỗi dậy xoáy tròn dữ dội dựng thành bức tường bão cát cao ngàn mét, nuốt chửng hoàn toàn đội quân phi tặc hung ác vào lòng cát vàng huyền diệu sâu thẳm."
+  },
+  {
+    title: "Phi Hành Gia Cô Độc Kepler",
+    description: "Tín hiệu năng lượng pha lê bừng sáng từ lòng đất hoang vu",
+    idea: "Hành trình của một phi hành gia cô đơn trên hành tinh đóng băng Kepler-186f hoang vu. Bất ngờ, anh phát hiện ra một thạch tháp tín hiệu bằng pha lê cổ đại chìm dưới lớp băng mỏng đang phát ra nguồn năng lượng xanh rực rỡ lấp lánh và bản nhạc cổ điển ngân nga vang vọng vào khoảng không vô tận vũ trụ, giải thoát ký ức lãng quên."
+  },
+  {
+    title: "Huyền Thế Đỉnh Fansipan",
+    description: "Nhà hành hương tìm thấy giếng ngọc hồi sinh hồi phục cơ thể",
+    idea: "Nhà leo núi Kiên kiệt sức trên vách đá trập trùng tuyết phủ âm bão lốc đỉnh Fansipan hùng vĩ. Khi ý thức gần tắt, anh ngã sụp xuống kẽ nứt đá và lọt vào thạch động ngầm rực cháy nham thạch ấm áp khói sương. Tại trung tâm động, giếng cổ lấp lánh tinh vân ngọc luân chuyển dòng linh dược chảy rần rần nuôi sống cơ thể anh khỏe mạnh bất ngờ cùng một tiếng vọng ngàn tuổi từ sâu trong núi đá cổ vũ ý chí kiên trung vượt qua bão tuyết."
   }
 ];
 
@@ -122,7 +162,7 @@ const LOADING_STEPS = [
 export default function App() {
   const [sessionOptions, setSessionOptions] = useState<GeneratorOptions>({
     storyIdea: "",
-    style: "Cinematic Landscape Epic",
+    style: "Pixar 3D Animation",
     sceneCount: 0,
     tone: "Epic Orchestral",
     characterConsistency: "",
@@ -163,6 +203,20 @@ export default function App() {
   const abortControllerRef = useRef<AbortController | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [imageResolution, setImageResolution] = useState<"1K" | "2K" | "4K">("1K");
+
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth'
+    });
+  };
+
+  // Chọn ngẫu nhiên 4 kịch bản mẫu sử thi khi khởi động ứng dụng
+  const [randomExamples] = useState(() => {
+    const shuffled = [...DATABASE_OF_EXAMPLES].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4);
+  });
 
   // Monitor scroll for header visual transition
   useEffect(() => {
@@ -202,7 +256,7 @@ export default function App() {
     }
     setSessionOptions({
       storyIdea: "",
-      style: "Cinematic Landscape Epic",
+      style: "Pixar 3D Animation",
       sceneCount: 0,
       tone: "Epic Orchestral",
       characterConsistency: "",
@@ -364,7 +418,7 @@ export default function App() {
       const response = await fetch("/api/generate-demo-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, referenceImages, customApiKey, aspectRatio: sessionOptions.aspectRatio })
+        body: JSON.stringify({ prompt, referenceImages, customApiKey, aspectRatio: sessionOptions.aspectRatio, imageSize: imageResolution })
       });
 
       const data = await response.json();
@@ -390,7 +444,7 @@ export default function App() {
       const response = await fetch("/api/generate-demo-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, customApiKey, aspectRatio: sessionOptions.aspectRatio })
+        body: JSON.stringify({ prompt, customApiKey, aspectRatio: sessionOptions.aspectRatio, imageSize: imageResolution })
       });
 
       const data = await response.json();
@@ -492,7 +546,7 @@ export default function App() {
     md += `---\n\n`;
 
     currentScript.danh_sach_phan_canh.forEach((scene) => {
-      md += `## Phân cảnh ${scene.so_phan_canh} (${scene.thoi_luong})\n`;
+      md += `## Shot ${scene.so_phan_canh} (${scene.thoi_luong})\n`;
       md += `- **Bối cảnh:** ${scene.boi_canh}\n`;
       if (scene.ma_tham_chieu_elements && scene.ma_tham_chieu_elements.length > 0) {
         md += `- **Yếu tố tham gia:** ${scene.ma_tham_chieu_elements.join(', ')}\n`;
@@ -623,7 +677,7 @@ export default function App() {
     md += `---\n\n`;
 
     currentScript.danh_sach_phan_canh.forEach((scene) => {
-      md += `## PHÂN CẢNH ${scene.so_phan_canh} [Thời lượng: ${scene.thoi_luong}]\n\n`;
+      md += `## SHOT ${scene.so_phan_canh} [Thời lượng: ${scene.thoi_luong}]\n\n`;
       md += `* **Bối cảnh:** ${scene.boi_canh}\n`;
       if (scene.ma_tham_chieu_elements && scene.ma_tham_chieu_elements.length > 0) {
         md += `* **Yếu tố tham gia:** ${scene.ma_tham_chieu_elements.join(', ')}\n`;
@@ -937,7 +991,7 @@ export default function App() {
                 <span>💡 Chọn nhanh kịch bản mẫu:</span>
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {EXAMPLES.map((ex, i) => (
+                {randomExamples.map((ex, i) => (
                   <button
                     key={i}
                     onClick={() => setSessionOptions(prev => ({ ...prev, storyIdea: ex.idea }))}
@@ -1058,6 +1112,30 @@ export default function App() {
                 ))}
               </div>
             </div>
+
+            {/* RESOLUTION SELECTOR FOR IMAGE GENERATION */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Độ phân giải (Image Resolution):</label>
+              <div className="grid grid-cols-3 gap-2">
+                {(["1K", "2K", "4K"] as const).map((resOpt) => (
+                  <button
+                    key={resOpt}
+                    type="button"
+                    onClick={() => setImageResolution(resOpt)}
+                    className={`py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all flex flex-col items-center justify-center cursor-pointer ${
+                      imageResolution === resOpt 
+                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 font-bold' 
+                        : 'bg-black/40 border-[#222] text-slate-500 hover:border-slate-700 hover:bg-[#1C1C1F]'
+                    }`}
+                  >
+                    <span className="text-xs font-mono font-bold">{resOpt}</span>
+                    <span className="text-[10px] text-slate-500 font-medium font-sans uppercase tracking-tight">
+                      {resOpt === "1K" ? "Mặc định (1K)" : resOpt === "2K" ? "Chi tiết (2K)" : "Siêu nét 4K"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
             
             {/* ĐỒNG NHẤT NHÂN VẬT (CHARACTER consistency) */}
             <div className="space-y-2 bg-[#1C1C1F] p-3 rounded-lg border border-[#222]">
@@ -1169,7 +1247,16 @@ export default function App() {
         </div>
 
         {/* RIGHT COLUMN: MAIN PREVIEW CONTENT */}
-        <div className="w-full lg:flex-1 flex flex-col min-h-[500px] transition-all duration-300">
+        <div className="w-full lg:flex-1 flex flex-col min-h-[500px] transition-all duration-300 relative">
+          {currentScript && !loading && !error && (
+            <button
+              onClick={scrollToBottom}
+              className="absolute right-4 top-4 bg-amber-500 hover:bg-amber-400 text-black p-2.5 rounded-lg border border-amber-500/20 font-bold transition-all cursor-pointer z-50 shadow-lg hover:shadow-amber-500/10 active:scale-95 hover:scale-105"
+              title="Cuộn xuống cuối kịch bản"
+            >
+              <ArrowDown className="w-4 h-4" />
+            </button>
+          )}
           
           <AnimatePresence mode="wait">
             
@@ -1297,7 +1384,7 @@ export default function App() {
                         {sessionOptions.style.split(' ').pop() || "Sử thi"}
                       </span>
                       <span className="text-[9px] font-bold font-mono uppercase tracking-wider bg-zinc-800 text-slate-300 border border-[#222] px-2 py-0.5 rounded">
-                        🎬 {currentScript.danh_sach_phan_canh.length} phân cảnh
+                        🎬 {currentScript.danh_sach_phan_canh.length} shot
                       </span>
                     </div>
 
@@ -1417,7 +1504,7 @@ export default function App() {
                                             <>
                                               <ImageIcon className="w-6 h-6 opacity-30 mb-1" />
                                               <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 text-center">Khung hình nhân vật</span>
-                                              <span className="text-[8px] text-slate-500 max-w-[130px] text-center mt-0.5">2-Panel Character Sheet</span>
+                                              <span className="text-[8px] text-amber-500 max-w-[130px] text-center mt-0.5 font-medium bg-amber-500/10 px-1 rounded">Nano Banana 2 ({imageResolution})</span>
                                             </>
                                           )}
                                         </div>
@@ -1537,7 +1624,7 @@ export default function App() {
                                             <>
                                               <ImageIcon className="w-6 h-6 opacity-30 mb-1" />
                                               <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 text-center">Khung hình bối cảnh</span>
-                                              <span className="text-[8px] text-slate-500 max-w-[130px] mt-0.5 text-center">Quang cảnh góc rộng</span>
+                                              <span className="text-[8px] text-amber-500 max-w-[130px] mt-0.5 text-center font-medium bg-amber-500/10 px-1 rounded">Nano Banana 2 ({imageResolution})</span>
                                             </>
                                           )}
                                         </div>
@@ -1657,7 +1744,7 @@ export default function App() {
                                             <>
                                               <ImageIcon className="w-6 h-6 opacity-30 mb-1" />
                                               <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 text-center">Khung hình đạo cụ</span>
-                                              <span className="text-[8px] text-slate-500 max-w-[130px] mt-0.5 text-center">Vật thể đơn lẻ biệt lập</span>
+                                              <span className="text-[8px] text-amber-500 max-w-[130px] mt-0.5 text-center font-medium bg-amber-500/10 px-1 rounded">Nano Banana 2 ({imageResolution})</span>
                                             </>
                                           )}
                                         </div>
@@ -1738,7 +1825,7 @@ export default function App() {
                         <div className="bg-[#18181B] border-b border-[#222] p-3 flex flex-wrap items-center justify-between gap-2">
                           <div className="flex items-center gap-2">
                             <span className="text-[10px] font-mono text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded font-bold">
-                              SCENE {scene.so_phan_canh.toString().padStart(2, '0')}
+                              SHOT {scene.so_phan_canh.toString().padStart(2, '0')}
                             </span>
                             <span className="text-[10px] font-mono text-slate-400">
                               Duration: {scene.thoi_luong}
@@ -1757,7 +1844,7 @@ export default function App() {
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4">
                           
                           {/* STORYBOARD IMAGE FRAME GENERATOR */}
-                          <div className="md:col-span-4 flex flex-col justify-between gap-2.5">
+                          <div className="md:col-span-4 flex flex-col justify-start gap-2.5">
                             
                             {/* RENDER IMAGE PLACEHOLDER OR Base64 */}
                             <div className={`relative ${ASPECT_RATIOS.find(r => r.id === sessionOptions.aspectRatio)?.cls || "aspect-video"} bg-black rounded-lg overflow-hidden border border-[#333] flex flex-col items-center justify-center text-center group`}>
@@ -1791,7 +1878,7 @@ export default function App() {
                                     <>
                                       <ImageIcon className="w-8 h-8 opacity-30 group-hover:scale-110 transition-transform mb-1" />
                                       <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Khung hình phân cảnh</span>
-                                      <span className="text-[8px] text-slate-500 mt-0.5 max-w-[150px]">Chưa sinh ảnh phác họa</span>
+                                      <span className="text-[8px] text-amber-500 mt-0.5 max-w-[150px] font-semibold bg-amber-500/10 px-1 rounded animate-pulse">Nano Banana 2 ({imageResolution})</span>
                                     </>
                                   )}
                                 </div>
